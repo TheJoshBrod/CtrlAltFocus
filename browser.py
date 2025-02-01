@@ -73,16 +73,53 @@ def check_inactivity():
 def rickroll(driver):
     driver.execute_script("window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ)','_blank');")
 
-def punishment(enable_pushiments: list) -> None:
+def tab_zapper(driver):
+    driver.execute_script("window.open('');")
+    time.sleep(1)
+
+    # Switch to the new tab (new tab is at index 1)
+    driver.switch_to.window(driver.window_handles[1])
+
+    # Create a custom HTML string
+    custom_html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>3</title>
+    </head>
+    <style>
+    p {
+        font-size: 100px;
+    }
+    div {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        height: 100%;
+    }
+    </style>
+    <body>
+        <div>
+            <p>3</p>
+        </div>
+    </body>
+    </html>
+    """
+
+    # Write the custom HTML content in the new tab
+    driver.execute_script("document.write(arguments[0]);", custom_html)
+
+def punishment(enable_pushiments: list, driver) -> None:
     if (len(enable_pushiments) == 0):
         print("No Punishment selected")
         return
 
-    punishment_pos = random.randint(1, len(enable_pushiments))
+    punishment_pos = random.randint(0, len(enable_pushiments) - 1)
     punishment = enable_pushiments[punishment_pos]
 
     if (punishment == "Tab_Zapper"):
         print("Tab_Zapper")
+        tab_zapper(driver)
     elif (punishment == "Tab_Shuffler"):
         print("Tab_Shuffler")
     elif (punishment == "Fake_Tab_Shuffler"):
@@ -119,7 +156,7 @@ def main() -> None:
             # Check if the system is idle for more than the threshold time
             if check_inactivity():
                 # Open or focus the browser when inactivity is detected
-                punishment(enabled_punishments)
+                punishment(enabled_punishments, driver)
                 
             time.sleep(60)  # Check for inactivity every second
 
