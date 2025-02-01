@@ -38,7 +38,7 @@ def get_default_browser(browser=""):
 
 def main() -> None:
    
-    driver = get_default_browser("edge")
+    driver = get_default_browser()
     driver.get('https://google.com')
     while True:
         continue
