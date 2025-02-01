@@ -12,7 +12,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 INACTIVITY_THRESHOLD = 3  # Adjust as needed
 last_active_time = time.time()  # Store the time of the last activity (mouse or keyboard event)
 
-
 def get_default_browser(browser=""):
     try:
         # Open the registry key that contains the default browser
@@ -66,7 +65,6 @@ def on_press(key):
 def check_inactivity():
     global last_active_time
     if time.time() - last_active_time > INACTIVITY_THRESHOLD:
-        print("Inactivity detected!")
         return True
     return False
 
