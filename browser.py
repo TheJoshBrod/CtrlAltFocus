@@ -70,6 +70,8 @@ def check_inactivity():
         return True
     return False
 
+def rickroll(driver):
+    driver.execute_script("window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ)','_blank');")
 
 def punishment(enable_pushiments: list) -> None:
     if (len(enable_pushiments) == 0):
