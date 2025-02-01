@@ -67,6 +67,7 @@ def check_inactivity():
         print("Inactivity detected!")
         return True
     return False
+
 def rickroll(driver):
     driver.execute_script("window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ)','_blank');")
 
