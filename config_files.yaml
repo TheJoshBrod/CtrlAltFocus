@@ -5,10 +5,11 @@ Productivity_Antidote:
   Bop_It_Enabled: False
   Mouse_Wiggler: False
 Productivity_Punishments: 
+  rickroll: True
   Tab_Zapper: False
   Tab_Shuffler: False
   Fake_Tab_Shuffler: False
-  Pop_Up_Generator: False
+  Pop_Up_Generator: False 
   Noise_Maker: False
   Constellation_Mode: False
   

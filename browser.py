@@ -59,7 +59,8 @@ def check_inactivity():
         print("Inactivity detected!")
         return True
     return False
-
+def rickroll(driver):
+    driver.execute_script("window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ)','_blank');")
 
 def main() -> None:
     # Initialize Selenium WebDriver
@@ -79,7 +80,7 @@ def main() -> None:
             if check_inactivity():
                 # Open or focus the browser when inactivity is detected
                 driver.execute_script("window.open('https://bing.com', '_blank');") # You can add any action here
-
+               
             time.sleep(1)  # Check for inactivity every second
 
 
