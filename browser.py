@@ -1,10 +1,12 @@
 import time
+import yaml
+import winreg
+import random
 from pynput import mouse, keyboard
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from webdriver_manager.chrome import ChromeDriverManager
-import winreg
 
 # Time threshold for inactivity (in seconds)
 INACTIVITY_THRESHOLD = 3  # Adjust as needed
@@ -69,15 +71,44 @@ def check_inactivity():
     return False
 
 
+def punishment(enable_pushiments: list) -> None:
+    if (len(enable_pushiments) == 0):
+        print("No Punishment selected")
+        return
+
+    punishment_pos = random.randint(1, len(enable_pushiments))
+    punishment = enable_pushiments[punishment_pos]
+
+    if (punishment == "Tab_Zapper"):
+        print("Tab_Zapper")
+    elif (punishment == "Tab_Shuffler"):
+        print("Tab_Shuffler")
+    elif (punishment == "Fake_Tab_Shuffler"):
+        print("Fake_Tab_Shuffler")
+    elif (punishment == "Pop_Up_Generator"):
+        print("Pop_Up_Generator")
+    elif (punishment == "Noise_Maker"):
+        print("Noise_Maker")
+    elif (punishment == "Constellation_Mode"):
+        print("Constellation_Mode")
+    elif (punishment == "Brainrot_Mode"):
+        print("Brainrot_Mode")
+    else:
+        print(f"Error: {punishment}")
+
+
 def main() -> None:
    
-    driver = get_default_browser("brave")
-    if isinstance(driver, str):
-        print(driver)  # Error in detecting browser
-        return
+    driver = get_default_browser()
 
     driver.get('https://google.com')
 
+    with open("config_files.yaml", "r") as file:
+        config = yaml.safe_load(file)
+    
+    punishment_options = config["Productivity_Punishments"]
+    enabled_punishments = [key for key, value in punishment_options.items() if value]
+    
     # Set up listeners for mouse and keyboard events
     with mouse.Listener(on_move=on_move, on_click=on_click) as mouse_listener, \
             keyboard.Listener(on_press=on_press) as keyboard_listener:
@@ -86,9 +117,9 @@ def main() -> None:
             # Check if the system is idle for more than the threshold time
             if check_inactivity():
                 # Open or focus the browser when inactivity is detected
-                driver.execute_script("window.open('https://bing.com', '_blank');") # You can add any action here
-
-            time.sleep(1)  # Check for inactivity every second
+                punishment(enabled_punishments)
+                
+            time.sleep(60)  # Check for inactivity every second
 
 
 if __name__ == "__main__":
