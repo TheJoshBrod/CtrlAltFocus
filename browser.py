@@ -3,6 +3,7 @@ from pynput import mouse, keyboard
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from webdriver_manager.chrome import ChromeDriverManager
 import winreg
 
 # Time threshold for inactivity (in seconds)
@@ -21,7 +22,6 @@ def get_default_browser(browser=""):
             prog_id = browser
             # Check if the prog_id contains Firefox
         if "firefox" in prog_id.lower():
-            # Set up the Firefox driver
             options = webdriver.FirefoxOptions()
             return webdriver.Firefox(options=options)
         elif "chrome" in prog_id.lower():
@@ -32,6 +32,14 @@ def get_default_browser(browser=""):
             # Setup the WebDriver with the EdgeDriverManager
             driver = webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()), options=options)
             return driver
+        elif "opera" in prog_id.lower():
+            options = webdriver.ChromeOptions()
+            options.binary_location = r"C:\Program Files\Opera GX\opera.exe"  # Path to Opera GX binary
+            return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        elif "brave" in prog_id.lower():
+            options = webdriver.ChromeOptions()
+            options.binary_location = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"  # Path to Brave binary
+            return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         else:
             return "Unknown Browser"
     except Exception as e:
@@ -63,8 +71,8 @@ def rickroll(driver):
     driver.execute_script("window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ)','_blank');")
 
 def main() -> None:
-    # Initialize Selenium WebDriver
-    driver = get_default_browser()
+   
+    driver = get_default_browser("brave")
     if isinstance(driver, str):
         print(driver)  # Error in detecting browser
         return
