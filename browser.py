@@ -1,4 +1,5 @@
 import time
+import pynput
 import winreg
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
@@ -40,6 +41,8 @@ def main() -> None:
    
     driver = get_default_browser()
     driver.get('https://google.com')
+
+    mouse_last_moved = time.time()
     while True:
         continue
 
