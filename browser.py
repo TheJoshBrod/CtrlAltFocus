@@ -4,7 +4,7 @@ import winreg
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
-
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 def get_default_browser(browser=""):
@@ -17,7 +17,6 @@ def get_default_browser(browser=""):
             prog_id = browser 
         # Check if the prog_id contains Firefox
         if "firefox" in prog_id.lower():
-            # Set up the Firefox driver
             options = webdriver.FirefoxOptions()
             return webdriver.Firefox(options=options)
         elif "chrome" in prog_id.lower():
@@ -25,11 +24,16 @@ def get_default_browser(browser=""):
             return webdriver.Chrome(options=options)
         elif "edge" in prog_id.lower():
             options = webdriver.EdgeOptions()
-            
-            # Setup the WebDriver with the EdgeDriverManager
             driver = webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()), options=options)
-  
             return driver
+        elif "opera" in prog_id.lower():
+            options = webdriver.ChromeOptions()
+            options.binary_location = r"C:\Program Files\Opera GX\opera.exe"  # Path to Opera GX binary
+            return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        elif "brave" in prog_id.lower():
+            options = webdriver.ChromeOptions()
+            options.binary_location = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"  # Path to Brave binary
+            return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         else:
             return "Unknown Browser"
     except Exception as e:
@@ -39,7 +43,7 @@ def get_default_browser(browser=""):
 
 def main() -> None:
    
-    driver = get_default_browser()
+    driver = get_default_browser("brave")
     driver.get('https://google.com')
 
     mouse_last_moved = time.time()
