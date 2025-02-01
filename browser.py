@@ -71,7 +71,7 @@ def check_inactivity():
     return False
 
 def rickroll(driver):
-    driver.execute_script("window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ)','_blank');")
+    driver.execute_script("window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ)');")
 
 
 def tab_zapper_clean_up(driver):
@@ -163,6 +163,9 @@ def punishment(enable_pushiments: list, driver) -> None:
         print("Constellation_Mode")
     elif (punishment == "Brainrot_Mode"):
         print("Brainrot_Mode")
+    elif(punishment == "Rick_Roll"):
+        print("Rick_Roll")
+        rickroll(driver)
     else:
         print(f"Error: {punishment}")
 
