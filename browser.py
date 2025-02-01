@@ -73,21 +73,30 @@ def check_inactivity():
 def rickroll(driver):
     driver.execute_script("window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ)','_blank');")
 
-def tab_zapper(driver):
-    driver.execute_script("window.open('');")
-    time.sleep(1)
 
-    # Switch to the new tab (new tab is at index 1)
-    driver.switch_to.window(driver.window_handles[1])
+def tab_zapper_clean_up(driver):
+    # Loop through all open windows
+    for handle in driver.window_handles[-5:]:
+        driver.switch_to.window(handle)
+        tab_title = driver.title  # Get the title of the current tab
+        # Check if the title matches one of the desired titles (1 to 5)
+        if tab_title in ['1', '2', '3', '4', '5']:  # Comparing the tab title to string values
+            driver.close()
+    driver.switch_to.window(driver.window_handles[-1])
+def tab_zapper(driver):
 
     # Create a custom HTML string
     custom_html = """
     <!DOCTYPE html>
     <html>
     <head>
-        <title>3</title>
+        <title>$</title>
     </head>
     <style>
+    html, body {
+            height: 100%;
+            margin: 0;
+    }
     p {
         font-size: 100px;
     }
@@ -100,14 +109,36 @@ def tab_zapper(driver):
     </style>
     <body>
         <div>
-            <p>3</p>
+            <p>$</p>
         </div>
     </body>
     </html>
     """
 
-    # Write the custom HTML content in the new tab
-    driver.execute_script("document.write(arguments[0]);", custom_html)
+    is_inactive = True
+
+    while is_inactive:
+        for x in range(5):
+            driver.execute_script("window.open('');")
+            driver.switch_to.window(driver.window_handles[-1])
+            current_html = custom_html.replace("$", str(x+1))
+
+            driver.execute_script("document.write(arguments[0]);", current_html)
+
+        if not check_inactivity():
+            is_inactive = False
+            break
+
+        for x in range(6):
+            time.sleep(1)
+            if not check_inactivity():
+                is_inactive = False
+                break
+            driver.switch_to.window(driver.window_handles[-1])
+            driver.close()
+        driver.switch_to.window(driver.window_handles[-1])
+
+    tab_zapper_clean_up(driver)
 
 def punishment(enable_pushiments: list, driver) -> None:
     if (len(enable_pushiments) == 0):
@@ -158,7 +189,7 @@ def main() -> None:
                 # Open or focus the browser when inactivity is detected
                 punishment(enabled_punishments, driver)
                 
-            time.sleep(60)  # Check for inactivity every second
+            time.sleep(10)  # Check for inactivity every second
 
 
 if __name__ == "__main__":
