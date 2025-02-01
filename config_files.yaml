@@ -5,7 +5,7 @@ Productivity_Antidote:
   Bop_It_Enabled: False
   Mouse_Wiggler: False
 Productivity_Punishments: 
-  rickroll: False
+  Rick_Roll: True
   Tab_Zapper: True
   Tab_Shuffler: False
   Fake_Tab_Shuffler: False
