@@ -118,7 +118,7 @@ def process_queue(snoopy_animations_queue):
     try:
         item = snoopy_animations_queue.get_nowait()
         text, x_offset, y_offset, scale_factor, text_speed = item
-        show_snoopy_animation("snoopy1.png", "snoopy2.png", text, x_offset, y_offset, scale_factor, text_speed)
+        show_snoopy_animation("/resources/photos/snoopy1.png", "/resources/photos/snoopy2.png", text, x_offset, y_offset, scale_factor, text_speed)
     except queue.Empty:
         pass
     root.after(100, process_queue, snoopy_animations_queue)
