@@ -10,7 +10,7 @@ from selenium.webdriver.edge.service import Service
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from webdriver_manager.chrome import ChromeDriverManager
 
-import punishment as pn
+import incentive as pn
 from inactivity_tracker import InactivityTracker
 
 
@@ -52,35 +52,35 @@ def get_default_browser(browser=""):
     except Exception as e:
         return f"Error: {e}"
 
-def punishment(enable_pushiments: list, driver, tracker) -> None:
+def incentive(enabled_incentives: list, driver, tracker) -> None:
     print("Punishing!")
-    if (len(enable_pushiments) == 0):
-        print("No Punishment selected")
+    if (len(enabled_incentives) == 0):
+        print("No incentive selected")
         return
 
-    punishment_pos = random.randint(0, len(enable_pushiments) - 1)
-    punishment = enable_pushiments[punishment_pos]
+    incentive_pos = random.randint(0, len(enabled_incentives) - 1)
+    incentive = enabled_incentives[incentive_pos]
 
-    if (punishment == "Tab_Zapper"):
+    if (incentive == "Tab_Zapper"):
         print("Tab_Zapper")
         pn.tab_zapper(driver, tracker)
-    elif (punishment == "Tab_Shuffler"):
+    elif (incentive == "Tab_Shuffler"):
         print("Tab_Shuffler")
         pn.tab_shuffler(driver)
-    elif (punishment == "Pop_Up_Generator"):
+    elif (incentive == "Pop_Up_Generator"):
         print("Pop_Up_Generator")
-    elif (punishment == "Noise_Maker"):
+    elif (incentive == "Noise_Maker"):
         print("Noise_Maker")
         pn.noise_maker(driver, tracker)
-    elif (punishment == "Constellation_Mode"):
+    elif (incentive == "Constellation_Mode"):
         print("Constellation_Mode")
-    elif (punishment == "Brainrot_Mode"):
+    elif (incentive == "Brainrot_Mode"):
         print("Brainrot_Mode")
-    elif(punishment == "Rick_Roll"):
+    elif(incentive == "Rick_Roll"):
         print("Rick_Roll")
         pn.rickroll(driver, tracker)
     else:
-        print(f"Error: {punishment}")
+        print(f"Error: {incentive}")
 
 def main() -> None:
     driver = get_default_browser()
@@ -90,18 +90,20 @@ def main() -> None:
     with open("config_files.yaml", "r") as file:
         config = yaml.safe_load(file)
 
-    punishment_options = config["Productivity_Punishments"]
-    enabled_punishments = [key for key, value in punishment_options.items() if value]
+    incentive_options = config["Productivity_Incentives"]
+    enabled_incentives = [key for key, value in incentive_options.items() if value]
+    
+    bop_it_mode = config["Productivity_Incentives"]
 
     try:
-        tracker = InactivityTracker(inactivity_threshold=10)
+        tracker = InactivityTracker(10, bop_it_mode)
         tracker_thread = threading.Thread(target=tracker.start_listening, daemon=True)
         tracker_thread.start()
 
         while True:
             if not tracker.is_active():
-                # Apply punishment if inactivity detected
-                punishment(enabled_punishments, driver, tracker)    
+                # Apply incentive if inactivity detected
+                incentive(enabled_incentives, driver, tracker)    
             time.sleep(60)
         tracker_thread.join()
     except KeyboardInterrupt:
