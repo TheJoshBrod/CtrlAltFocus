@@ -1,3 +1,4 @@
+# v4.py
 import requests
 import time
 from selenium import webdriver
@@ -24,6 +25,8 @@ def snoopy_popup(driver, tracker):
             "prompt": prompt,
             "stream": False,
             "format": "json",
+            "temperature": 0.7,  # Adjust as needed
+            "top_p": 0.9       # Adjust as needed
         }
 
         try:
@@ -90,7 +93,7 @@ def snoopy_popup(driver, tracker):
 
     def monitor_tabs(snoopy_animations_queue, stop_event):
         try:
-            while not stop_event.is_set():
+            while not stop_event.is_set():  # Check stop_event *frequently*
                 tabs = driver.window_handles
                 tab_titles = []
 
@@ -127,31 +130,84 @@ def snoopy_popup(driver, tracker):
                     speak_thread.daemon = True
                     speak_thread.start()
 
-                time.sleep(2)
+                time.sleep(2)  # Adjust sleep time as needed
 
         except KeyboardInterrupt:
             print("\nStopping tab monitoring...")
         finally:
-            driver.quit()
+            print("monitor_tabs thread finished.")  # Confirmation
 
-    def check_tracker(stop_event):
-        while not stop_event.is_set():
+    def check_tracker(pause_event):  # Use a pause event
+        while True:  # Keep checking indefinitely
             if tracker.is_active():
-                print("Tracker is active! Terminating program.")
-                try:
-                    driver.quit()
-                except Exception as e:
-                    print(f"Error closing driver: {e}")
-                os._exit(0)
-            time.sleep(1)
+                print("Tracker is active! Pausing program.")
+                pause_event.set()  # Pause the monitor thread
+                while tracker.is_active():  # Stay in this while loop until tracker is no longer active
+                    time.sleep(1)  # Check every second
+                print("Tracker is no longer active. Resuming program.")
+                pause_event.clear()  # Resume the monitor thread
+
+            time.sleep(1)  # Check every second
+
+    def monitor_tabs(snoopy_animations_queue, stop_event, pause_event):
+        try:
+            while not stop_event.is_set():
+                if not pause_event.is_set():  # Only run if not paused
+                    tabs = driver.window_handles
+                    tab_titles = []
+
+                    for tab in tabs:
+                        driver.switch_to.window(tab)
+                        tab_titles.append(driver.title)
+
+                    prompt = f"""
+                    Creatively insult me to get back to work or to stop getting distracted (make it cohesive sentences).
+                    Focus on these tab activities: {', '.join(tab_titles)}
+                    """
+
+                    insult = call_llama_api(prompt)
+
+                    if insult:
+                        print("prompt: ", prompt)
+                        print("insult: ", insult)
+
+                        screen_width = root.winfo_screenwidth()
+                        screen_height = root.winfo_screenheight()
+
+                        available_width = screen_width
+                        available_height = screen_height
+
+                        x_offset = random.randint(-(available_width // 2) + 25, (available_width // 2) - 200)
+                        y_offset = random.randint(-(available_height // 2) + 75, (available_height // 2) - 75)
+
+                        scale_factor = random.uniform(0.5, 1.5)
+                        text_speed = random.uniform(0.2, 0.4)
+
+                        snoopy_animations_queue.put((insult, x_offset, y_offset, scale_factor, text_speed))
+
+                        speak_thread = threading.Thread(target=speak_text, args=(insult, text_speed, temp_dir))
+                        speak_thread.daemon = True
+                        speak_thread.start()
+
+                    time.sleep(2)  # Adjust sleep time as needed
+                else:
+                    time.sleep(1)  # Check if paused every second
+
+        except KeyboardInterrupt:
+            print("\nStopping tab monitoring...")
+        finally:
+            driver.quit()  # Ensure driver is closed in finally block
+            print("monitor_tabs thread finished.")
 
     # Main program execution
     stop_event = threading.Event()
+    pause_event = threading.Event()  # Create a pause event
 
-    monitor_thread = threading.Thread(target=monitor_tabs, args=(global_snoopy_queue, stop_event), daemon=True)
+    monitor_thread = threading.Thread(target=monitor_tabs, args=(global_snoopy_queue, stop_event, pause_event),
+                                      daemon=True)  # Pass the pause event
     monitor_thread.start()
 
-    tracker_thread = threading.Thread(target=check_tracker, args=(stop_event,), daemon=True)
+    tracker_thread = threading.Thread(target=check_tracker, args=(pause_event,), daemon=True)  # Pass the pause event
     tracker_thread.start()
 
     try:
@@ -163,7 +219,7 @@ def snoopy_popup(driver, tracker):
                     print("Keyboard interrupt detected. Closing...")
                     break
     finally:
-        stop_event.set()
+        stop_event.set()  # Signal threads to stop (important!)
         monitor_thread.join(timeout=10)
         tracker_thread.join(timeout=10)
         if monitor_thread.is_alive():
