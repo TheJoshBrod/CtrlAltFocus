@@ -7,20 +7,29 @@ import socket
 WIDTH, HEIGHT = 600, 400
 
 
-def bopit_socket_handler(conn, addr, instruct):
+def bopit_socket_handler(conn, addr, instruct, instruct_id):
     
-    msg = instruct.encode('utf-8')
-    conn.sendall(msg)
+    msg = str(instruct_id) + "$" + instruct
+    raw_msg = msg.encode('utf-8')
+    conn.sendall(raw_msg)
 
-    data = ""
-    while data is "":
-        try:
-            data = conn.recv(1024)
-            val = int.from_bytes(data, byteorder='big')
-            print(val)
-            return val
-        except Exception as e:
-            data = ""
+    try:
+        data = conn.recv(1024)
+        
+        rec_id = ""
+        pos = 0
+        cur_char = data[0].decode("utf-8")
+        while cur_char != "$":
+            rec_id += cur_char 
+            pos += 1
+            cur_char = data[pos].decode("utf-8")
+        if int(rec_id) != instruct_id:
+            return -1
+        pos += 1
+        val = int.from_bytes(data[pos], byteorder="big")
+        return val
+    except Exception as e:
+        data = -1
 
 
 def bopit_socket_generator():
@@ -118,12 +127,17 @@ def game(inputs: list, speed: float, level: int) -> True:
 
     conn, addr = bopit_socket_generator()
 
+
+    # Instruction id
+    instruct_id = 0
+
     # Escape condition
     messed_up = True
     while messed_up:
         messed_up = False
 
         for x in range(level):
+            instruct_id += 1
             instruct = instruction_screen(screen, clock, inputs)
 
             # Handle events
@@ -139,7 +153,7 @@ def game(inputs: list, speed: float, level: int) -> True:
             while current_time - last_update_time <= speed:
                 current_time = time.time()
                 
-                socket_response = bopit_socket_handler(conn, addr, instruct)
+                socket_response = bopit_socket_handler(conn, addr, instruct, instruct_id)
 
                 if socket_response == 0:
                     messed_up = True
