@@ -2,14 +2,19 @@ import time
 import yaml
 import winreg
 import random
-from pynput import mouse, keyboard
+import threading
+
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from webdriver_manager.chrome import ChromeDriverManager
 
+import punishment as pn
+from inactivity_tracker import InactivityTracker
+
+
 # Time threshold for inactivity (in seconds)
-INACTIVITY_THRESHOLD = 3  # Adjust as needed
+INACTIVITY_THRESHOLD = 5  # Adjust as needed
 last_active_time = time.time()  # Store the time of the last activity (mouse or keyboard event)
 
 def get_default_browser(browser=""):
@@ -68,77 +73,8 @@ def check_inactivity():
         return True
     return False
 
-def rickroll(driver):
-    driver.execute_script("window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ)');")
-
-
-def tab_zapper_clean_up(driver):
-    # Loop through all open windows
-    for handle in driver.window_handles[-5:]:
-        driver.switch_to.window(handle)
-        tab_title = driver.title  # Get the title of the current tab
-        # Check if the title matches one of the desired titles (1 to 5)
-        if tab_title in ['1', '2', '3', '4', '5']:  # Comparing the tab title to string values
-            driver.close()
-    driver.switch_to.window(driver.window_handles[-1])
-def tab_zapper(driver):
-
-    # Create a custom HTML string
-    custom_html = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>$</title>
-    </head>
-    <style>
-    html, body {
-            height: 100%;
-            margin: 0;
-    }
-    p {
-        font-size: 100px;
-    }
-    div {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        height: 100%;
-    }
-    </style>
-    <body>
-        <div>
-            <p>$</p>
-        </div>
-    </body>
-    </html>
-    """
-
-    is_inactive = True
-
-    while is_inactive:
-        for x in range(5):
-            driver.execute_script("window.open('');")
-            driver.switch_to.window(driver.window_handles[-1])
-            current_html = custom_html.replace("$", str(x+1))
-
-            driver.execute_script("document.write(arguments[0]);", current_html)
-
-        if not check_inactivity():
-            is_inactive = False
-            break
-
-        for x in range(6):
-            time.sleep(1)
-            if not check_inactivity():
-                is_inactive = False
-                break
-            driver.switch_to.window(driver.window_handles[-1])
-            driver.close()
-        driver.switch_to.window(driver.window_handles[-1])
-
-    tab_zapper_clean_up(driver)
-
-def punishment(enable_pushiments: list, driver) -> None:
+def punishment(enable_pushiments: list, driver, tracker) -> None:
+    print("Punishing!")
     if (len(enable_pushiments) == 0):
         print("No Punishment selected")
         return
@@ -148,7 +84,7 @@ def punishment(enable_pushiments: list, driver) -> None:
 
     if (punishment == "Tab_Zapper"):
         print("Tab_Zapper")
-        tab_zapper(driver)
+        pn.tab_zapper(driver, tracker)
     elif (punishment == "Tab_Shuffler"):
         print("Tab_Shuffler")
     elif (punishment == "Fake_Tab_Shuffler"):
@@ -163,35 +99,41 @@ def punishment(enable_pushiments: list, driver) -> None:
         print("Brainrot_Mode")
     elif(punishment == "Rick_Roll"):
         print("Rick_Roll")
-        rickroll(driver)
+        pn.rickroll(driver, tracker)
     else:
         print(f"Error: {punishment}")
 
 
 def main() -> None:
-   
     driver = get_default_browser()
-
     driver.get('https://google.com')
 
+    # Load configuration
     with open("config_files.yaml", "r") as file:
         config = yaml.safe_load(file)
-    
+
     punishment_options = config["Productivity_Punishments"]
     enabled_punishments = [key for key, value in punishment_options.items() if value]
-    
-    # Set up listeners for mouse and keyboard events
-    with mouse.Listener(on_move=on_move, on_click=on_click) as mouse_listener, \
-            keyboard.Listener(on_press=on_press) as keyboard_listener:
+
+    try:
+        # Initialize and start the inactivity tracker
+        tracker = InactivityTracker(inactivity_threshold=10)
+        tracker_thread = threading.Thread(target=tracker.start_listening)
+        tracker_thread.start()
 
         while True:
             # Check if the system is idle for more than the threshold time
-            if check_inactivity():
-                # Open or focus the browser when inactivity is detected
-                punishment(enabled_punishments, driver)
-                
-            time.sleep(10)  # Check for inactivity every second
+            if not tracker.is_active():
+                # Apply punishment if inactivity detected
+                punishment(enabled_punishments, driver, tracker)    
+            time.sleep(60)  # Check for inactivity every 5 seconds
 
-
+        tracker_thread.join()  # Ensure the tracker thread completes if needed
+    except KeyboardInterrupt:
+        tracker.stop_listening()  # Stop listeners and clean up
+        tracker_thread.join()  # Ensure tracker thread finishes
+    except Exception as e:
+        tracker.stop_listening()  # Stop listeners and clean up
+        tracker_thread.join()  # Ensure tracker thread finishes
 if __name__ == "__main__":
     main()
