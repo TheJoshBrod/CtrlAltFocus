@@ -12,7 +12,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 import incentive as pn
 from inactivity_tracker import InactivityTracker
-
+from main import snoopy_popup
 
 # Time threshold for inactivity (in seconds)
 INACTIVITY_THRESHOLD = 5  # Adjust as needed
@@ -102,6 +102,7 @@ def main() -> None:
 
         while True:
             if not tracker.is_active():
+                snoopy_popup(driver, tracker)
                 # Apply incentive if inactivity detected
                 incentive(enabled_incentives, driver, tracker)    
             time.sleep(60)

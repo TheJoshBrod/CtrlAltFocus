@@ -15,7 +15,7 @@ from functools import lru_cache
 import tempfile
 
 # API and WebDriver initialization
-def snoopy_popup(driver):
+def snoopy_popup(driver, tracker):
     url = "http://localhost:11434/api/generate"
 
     def call_llama_api(prompt):
@@ -98,7 +98,10 @@ def snoopy_popup(driver):
                     driver.switch_to.window(tab)
                     tab_titles.append(driver.title)
 
-                prompt = "creatively insult me to get back to work or to stop getting distracted (make it cohesive sentences) and to get back to these tab activities: " + ", ".join(tab_titles)
+                prompt = f"""
+                Creatively insult me to get back to work or to stop getting distracted (make it cohesive sentences).
+                Focus on these tab activities: {', '.join(tab_titles)}
+                """
 
                 insult = call_llama_api(prompt)
 
@@ -120,7 +123,7 @@ def snoopy_popup(driver):
 
                     snoopy_animations_queue.put((insult, x_offset, y_offset, scale_factor, text_speed))
 
-                    speak_thread = threading.Thread(target=speak_text, args=(insult, text_speed, temp_dir)) #Pass the temp dir to the function
+                    speak_thread = threading.Thread(target=speak_text, args=(insult, text_speed, temp_dir))
                     speak_thread.daemon = True
                     speak_thread.start()
 
@@ -131,11 +134,25 @@ def snoopy_popup(driver):
         finally:
             driver.quit()
 
+    def check_tracker(stop_event):
+        while not stop_event.is_set():
+            if tracker.is_active():
+                print("Tracker is active! Terminating program.")
+                try:
+                    driver.quit()
+                except Exception as e:
+                    print(f"Error closing driver: {e}")
+                os._exit(0)
+            time.sleep(1)
+
     # Main program execution
     stop_event = threading.Event()
 
     monitor_thread = threading.Thread(target=monitor_tabs, args=(global_snoopy_queue, stop_event), daemon=True)
     monitor_thread.start()
+
+    tracker_thread = threading.Thread(target=check_tracker, args=(stop_event,), daemon=True)
+    tracker_thread.start()
 
     try:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -148,6 +165,9 @@ def snoopy_popup(driver):
     finally:
         stop_event.set()
         monitor_thread.join(timeout=10)
+        tracker_thread.join(timeout=10)
         if monitor_thread.is_alive():
             print("Monitor thread did not exit gracefully. Consider force termination if necessary.")
+        if tracker_thread.is_alive():
+            print("Tracker thread did not exit gracefully. Consider force termination if necessary.")
         print("All threads terminated.")
