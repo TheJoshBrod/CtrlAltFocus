@@ -24,13 +24,15 @@ This repo serves as our group entry to SpartaHack W25 Mad Scientist Track.
 
 ### Python (Browser Engine)
 
-1.) Download Python >=3.9.13
-2.) run `pip install -r requirements.txt`
+1. Download Python >=3.9.13
+
+2. run `pip install -r requirements.txt`
 
 ### Llama
 
-1.) Download [Ollama](https://ollama.com/download/windows) from the offical download page
-2.) run `ollama run llama3.2`
+1. Download [Ollama](https://ollama.com/download/windows) from the offical download page
+
+2. run `ollama run llama3.2`
 
 ### C/C++ (Wii Remote API)
 
