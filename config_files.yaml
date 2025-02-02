@@ -10,6 +10,6 @@ Productivity_Incentives:
   Tab_Shuffler: False
   Pop_Up_Generator: False
   Noise_Maker: False
-  Constellation_Mode: False
-  Brainrot_Mode: True
+  Constellation_Mode: Yes
+  Brainrot_Mode: False
   

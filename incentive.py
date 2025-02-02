@@ -174,3 +174,50 @@ def brainrot(tracker):
             dt = clock.tick(60) / 1000
 
     pygame.quit()
+def constellation_mode(driver,tracker):
+    pygame.init()
+    screen = pygame.display.set_mode((0, 0),pygame.FULLSCREEN)
+    width, height = screen.get_size()
+
+
+    image = pygame.image.load('resources/space.jpg')
+    image = pygame.transform.scale(image, (width, height))
+
+
+    font = pygame.font.SysFont('Comic Sans MS', 100)  
+    text_color = ('white')
+    text_surface = font.render("Stop Spacing Out", True, text_color)
+
+
+    angle = 0
+
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                break
+            if tracker.is_active():
+                running = False
+                break
+
+
+        screen.blit(image, (0, 0))
+
+
+        rotated_text = pygame.transform.rotate(text_surface, angle)
+        rotated_rect = rotated_text.get_rect(center=(width / 2, height / 2))
+
+
+        screen.blit(rotated_text, rotated_rect)
+
+
+        pygame.display.update()
+
+
+        angle += 1
+
+
+        pygame.time.Clock().tick(65)
+    pygame.quit()
