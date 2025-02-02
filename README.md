@@ -1,8 +1,15 @@
 # SpartaHack-W25
 
+#### This repository contains submodule(s). Before we begin, please run
+```
+git submodule update --init --recursive
+```
+#### to pull said submodules' code into this repository.
+
 ## Building the Wii Controller Program
 
 ### For windows systems
+
 In order to build the binaries for this project, you will need [cmake](https://cmake.org/download/) installed. I recommend installing the latest version (currently 3.31.5 for x86 systems, 64-bit).
 
 After installing cmake, you'll want to add its executable to your systems $Env:PATH variable. To do this, go to Settings > System > About > Advanced System Settings > Environment Variables, then add 'C:\Program Files\CMake\bin' to the Path variable under your both the system and user sections.
