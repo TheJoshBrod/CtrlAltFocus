@@ -52,3 +52,8 @@ Icon
 /venv
 /virtual_env
 
+
+# Build directories
+build/*
+wiiuse/build/*
+
