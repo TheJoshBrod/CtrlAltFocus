@@ -179,21 +179,18 @@ def constellation_mode(driver,tracker):
     screen = pygame.display.set_mode((0, 0),pygame.FULLSCREEN)
     width, height = screen.get_size()
 
-
-    image = pygame.image.load('resources/space.jpg')
+    image = pygame.image.load('resources/photos/space.jpg')
     image = pygame.transform.scale(image, (width, height))
-
 
     font = pygame.font.SysFont('Comic Sans MS', 100)  
     text_color = ('white')
     text_surface = font.render("Stop Spacing Out", True, text_color)
 
-
     angle = 0
-
 
     running = True
     while running:
+        pygame.event.pump()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
