@@ -1,4 +1,34 @@
 import time
+import random
+
+def tab_shuffler(driver):
+    tablist = driver.window_handles;
+    tabtitles = []
+    conlist = []
+    indexlist = list(range(len(tablist)))
+    for tab in tablist:
+        driver.switch_to.window(tab)
+        title = driver.execute_script("return document.title;")
+        icon = driver.execute_script("""
+        var icon = document.querySelector("link[rel*='icon']");
+        return icon ? icon.href : '';""")
+        conlist.append(icon)
+        tabtitles.append(title)
+
+    random.shuffle(indexlist)
+    random.shuffle(indexlist)
+    
+    for i in range(len(tablist)):
+        driver.switch_to.window(tablist[i])
+        driver.execute_script(f"document.title = '{tabtitles[indexlist[i]]}';")
+        driver.execute_script(f"""
+        var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = '{conlist[indexlist[i]]}';
+        document.getElementsByTagName('head')[0].appendChild(link);
+        """)
+
 
 def rickroll(driver, tracker):
     driver.execute_script("window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ)');")

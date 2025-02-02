@@ -87,7 +87,7 @@ def punishment(enable_pushiments: list, driver, tracker) -> None:
         pn.tab_zapper(driver, tracker)
     elif (punishment == "Tab_Shuffler"):
         print("Tab_Shuffler")
-        tab_shuffler(driver)
+        pn.tab_shuffler(driver)
     elif (punishment == "Fake_Tab_Shuffler"):
         print("Fake_Tab_Shuffler")
     elif (punishment == "Pop_Up_Generator"):
