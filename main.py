@@ -25,8 +25,6 @@ def snoopy_popup(driver, tracker):
             "prompt": prompt,
             "stream": False,
             "format": "json",
-            "temperature": 0.7,  # Adjust as needed
-            "top_p": 0.9       # Adjust as needed
         }
 
         try:
