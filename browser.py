@@ -69,6 +69,7 @@ def incentive(enabled_incentives: list, driver, tracker) -> None:
         pn.tab_shuffler(driver)
     elif (incentive == "Snoopy_Mode"):
         print("Snoopy_Mode")
+        snoopy_popup(driver, tracker)
     elif (incentive == "Noise_Maker"):
         print("Noise_Maker")
         pn.noise_maker(driver, tracker)
@@ -99,8 +100,7 @@ def main() -> None:
         tracker_thread.start()
 
         while True:
-            if not tracker.is_active():
-                snoopy_popup(driver, tracker)
+            if not tracker.is_active:
                 # Apply incentive if inactivity detected
                 incentive(enabled_incentives, driver, tracker)    
             time.sleep(60)

@@ -2,11 +2,11 @@
 Brower_Options: 
   Browser_Name: ""  # Options: firefox, chrome, edge (leave blank for window's assigned default browser)
 Productivity_Antidote:
-  Bop_It_Enabled: False # Requires Wii Remote
-Productivity_Incentives: 
+  Bop_It_Enabled: False # Requires Wii Remote (Otherwise keep false)
+Productivity_Incentives: # Must set one to true
   Rick_Roll: False
   Tab_Zapper: False
-  Tab_Shuffler: False
+  Tab_Shuffler: True
   Snoopy_Mode: False
   Noise_Maker: False
   Constellation_Mode: False
