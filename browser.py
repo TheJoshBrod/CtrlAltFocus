@@ -51,28 +51,6 @@ def get_default_browser(browser=""):
     except Exception as e:
         return f"Error: {e}"
 
-
-def on_move(x, y):
-    global last_active_time
-    last_active_time = time.time()
-
-
-def on_click(x, y, button, pressed):
-    global last_active_time
-    last_active_time = time.time()
-
-
-def on_press(key):
-    global last_active_time
-    last_active_time = time.time()
-
-
-def check_inactivity():
-    global last_active_time
-    if time.time() - last_active_time > INACTIVITY_THRESHOLD:
-        return True
-    return False
-
 def punishment(enable_pushiments: list, driver, tracker) -> None:
     print("Punishing!")
     if (len(enable_pushiments) == 0):
@@ -103,7 +81,6 @@ def punishment(enable_pushiments: list, driver, tracker) -> None:
         pn.rickroll(driver, tracker)
     else:
         print(f"Error: {punishment}")
-
 
 def main() -> None:
     driver = get_default_browser()
