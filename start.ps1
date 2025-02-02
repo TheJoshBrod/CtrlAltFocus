@@ -6,7 +6,7 @@
 $workingDir = "."
 
 # Define source and destination paths for DLL and EXE
-$dllSource = "$workingDir\wiiuse\build\src\Release\wiiuse.dll"
+$dllSource = "$workingDir\wiiuse-lib\build\src\Release\wiiuse.dll"
 $exeSource = "$workingDir\build\src\Release\main.exe"
 $dllDest = "$workingDir\wiiuse.dll"
 $exeDest = "$workingDir\main.exe"
