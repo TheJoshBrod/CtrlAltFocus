@@ -100,10 +100,12 @@ def main() -> None:
         tracker_thread.start()
 
         while True:
-            if not tracker.is_active:
-                # Apply incentive if inactivity detected
+            
+            # Apply incentive if inactivity detected
+            if not tracker.is_active():
                 incentive(enabled_incentives, driver, tracker)    
             time.sleep(60)
+        
         tracker_thread.join()
     except KeyboardInterrupt:
         tracker.stop_listening()

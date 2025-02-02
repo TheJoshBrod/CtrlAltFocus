@@ -4,9 +4,9 @@ Brower_Options:
 Productivity_Antidote:
   Bop_It_Enabled: False # Requires Wii Remote (Otherwise keep false)
 Productivity_Incentives: # Must set one to true
-  Rick_Roll: False
+  Rick_Roll: True
   Tab_Zapper: False
-  Tab_Shuffler: True
+  Tab_Shuffler: False
   Snoopy_Mode: False
   Noise_Maker: False
   Constellation_Mode: False
