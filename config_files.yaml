@@ -1,6 +1,6 @@
 # Options for CtrlAltFocus
 Brower_Options: 
-  Browser_Name: ""  # Options: firefox, chrome, edge (leave blank for window's assigned default browser)
+  Browser_Name: ""  # Options: firefox, chrome, edge, brave, opera (leave blank for window's assigned default browser)
 Productivity_Antidote:
   Bop_It_Enabled: False # Requires Wii Remote (Otherwise keep false)
 Productivity_Incentives: # Must set one to true
