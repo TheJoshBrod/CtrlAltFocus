@@ -20,6 +20,35 @@ This repo serves as our group entry to SpartaHack W25 Mad Scientist Track.
 
 \*\*Optional
 
+## Features
+
+To access all features edit the config_files.yaml
+
+### Browser Name (see yaml for options):
+
+If left blank will use your OS's default browser option
+
+### Motivation Incentives (True or False):
+
+- Rick_Roll: \;\)
+- Tab_Zapper: Counts down from 5 and will close one tab at a time until focus is regained! (Oops did you care about that tab?)
+- Tab_Shuffler: Shuffles the name and icons of the tabs.  (Uh oh where you looking for that??)
+- Snoopy_Mode: Pop Up windows appear that you have to click to make disappear. (Warning: Snoopy may insult your ability to be distracted)
+- Noise_Maker: Random noises will play until focus is achieved! (Who needs background noise when I have constant alarms playing!)
+- Constellation_Mode: Screen will be blocked with a gorgeous starry night.
+
+
+### Bop-It Mode (True or False):
+
+When enabled sync your Wiimote to the program. You will have an opportunity to play a game of Bop-It until you win. 
+
+If you mess up? Try again!
+
+If you get lose your focus again? The game will get harder
+
+All the while the same motivation incentives will be happening until you complete your challenge
+
+
 ## How to install
 
 ### Python (Browser Engine)
