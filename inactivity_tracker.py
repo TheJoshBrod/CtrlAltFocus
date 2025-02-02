@@ -53,9 +53,9 @@ class InactivityTracker:
 
     def start_listening(self):
         # Start the listeners in separate threads
-        self.mouse_thread = threading.Thread(target=self.mouse_listener.start)
-        self.keyboard_thread = threading.Thread(target=self.keyboard_listener.start)
-        self.inactivity_thread = threading.Thread(target=self.check_inactivity)
+        self.mouse_thread = threading.Thread(target=self.mouse_listener.start, daemon=True)
+        self.keyboard_thread = threading.Thread(target=self.keyboard_listener.start, daemon=True)
+        self.inactivity_thread = threading.Thread(target=self.check_inactivity, daemon=True)
 
         self.mouse_thread.start()
         self.keyboard_thread.start()

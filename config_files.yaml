@@ -6,10 +6,10 @@ Productivity_Antidote:
   Mouse_Wiggler: False
 Productivity_Punishments: 
   Rick_Roll: False
-  Tab_Zapper: True
-  Fake_Tab_Shuffler: False
+  Tab_Zapper: False
+  Tab_Shuffler: False
   Pop_Up_Generator: False
-  Noise_Maker: False
+  Noise_Maker: True
   Constellation_Mode: False
   Brainrot_Mode: False
   

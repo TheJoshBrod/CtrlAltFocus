@@ -1,3 +1,4 @@
+import sys
 import time
 import yaml
 import winreg
@@ -66,12 +67,11 @@ def punishment(enable_pushiments: list, driver, tracker) -> None:
     elif (punishment == "Tab_Shuffler"):
         print("Tab_Shuffler")
         pn.tab_shuffler(driver)
-    elif (punishment == "Fake_Tab_Shuffler"):
-        print("Fake_Tab_Shuffler")
     elif (punishment == "Pop_Up_Generator"):
         print("Pop_Up_Generator")
     elif (punishment == "Noise_Maker"):
         print("Noise_Maker")
+        pn.noise_maker(driver, tracker)
     elif (punishment == "Constellation_Mode"):
         print("Constellation_Mode")
     elif (punishment == "Brainrot_Mode"):
@@ -94,24 +94,24 @@ def main() -> None:
     enabled_punishments = [key for key, value in punishment_options.items() if value]
 
     try:
-        # Initialize and start the inactivity tracker
         tracker = InactivityTracker(inactivity_threshold=10)
-        tracker_thread = threading.Thread(target=tracker.start_listening)
+        tracker_thread = threading.Thread(target=tracker.start_listening, daemon=True)
         tracker_thread.start()
 
         while True:
-            # Check if the system is idle for more than the threshold time
             if not tracker.is_active():
                 # Apply punishment if inactivity detected
                 punishment(enabled_punishments, driver, tracker)    
-            time.sleep(60)  # Check for inactivity every 5 seconds
-
-        tracker_thread.join()  # Ensure the tracker thread completes if needed
+            time.sleep(60)
+        tracker_thread.join()
     except KeyboardInterrupt:
-        tracker.stop_listening()  # Stop listeners and clean up
-        tracker_thread.join()  # Ensure tracker thread finishes
+        tracker.stop_listening()
+        sys.exit()
+        tracker_thread.join()
     except Exception as e:
-        tracker.stop_listening()  # Stop listeners and clean up
-        tracker_thread.join()  # Ensure tracker thread finishes
+        tracker.stop_listening()
+        sys.exit()
+        tracker_thread.join()
+        
 if __name__ == "__main__":
     main()

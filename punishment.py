@@ -1,5 +1,12 @@
+import glob
 import time
 import random
+import pygame
+import threading
+from playsound import playsound
+
+
+
 
 def tab_shuffler(driver):
     tablist = driver.window_handles;
@@ -84,18 +91,44 @@ def tab_zapper(driver, tracker):
             driver.execute_script("document.write(arguments[0]);", current_html)
 
         if tracker.is_active():
-            break        
+            tab_zapper_clean_up(driver)
+            return          
 
         for x in range(6):
             time.sleep(1)
             if tracker.is_active():
-                break       
+                tab_zapper_clean_up(driver)
+                return       
             driver.switch_to.window(driver.window_handles[-1])
             driver.close()
 
         if tracker.is_active():
-            break        
+            tab_zapper_clean_up(driver)
+            return       
         driver.switch_to.window(driver.window_handles[-1])
 
-
     tab_zapper_clean_up(driver)
+
+
+def noise_maker(driver, tracker):
+    noises = glob.glob("resources/audio/*")
+
+    pygame.mixer.init()
+
+    while not tracker.is_active():
+        sound_file1 = random.choice(noises)
+        sound_file2 = random.choice(noises)
+
+        sound1 = pygame.mixer.Sound(sound_file1)
+        sound2 = pygame.mixer.Sound(sound_file2)
+
+        channel1 = sound1.play()
+        channel2 = sound2.play()
+
+        while pygame.mixer.get_busy():
+            if tracker.is_active():
+                pygame.mixer.stop()
+                return
+            time.sleep(1)
+
+    pygame.mixer.stop()
