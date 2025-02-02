@@ -1,4 +1,4 @@
-#include "wiiuse/src/wiiuse.h"
+#include "wiiuse-lib/src/wiiuse.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
