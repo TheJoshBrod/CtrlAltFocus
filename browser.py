@@ -94,8 +94,7 @@ def main() -> None:
     incentive_options = config["Productivity_Incentives"]
     enabled_incentives = [key for key, value in incentive_options.items() if value]
     
-    bop_it_mode = config["Productivity_Incentives"]
-
+    bop_it_mode = config["Productivity_Antidote"]["Bop_It_Enabled"]
     try:
         tracker = InactivityTracker(10, bop_it_mode)
         tracker_thread = threading.Thread(target=tracker.start_listening, daemon=True)
