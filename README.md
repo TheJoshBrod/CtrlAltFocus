@@ -14,7 +14,7 @@ In order to build the binaries for this project, you will need [cmake](https://c
 
 After installing cmake, you'll want to add its executable to your systems $Env:PATH variable. To do this, go to Settings > System > About > Advanced System Settings > Environment Variables, then add 'C:\Program Files\CMake\bin' to the Path variable under your both the system and user sections.
 
-Next, head to the wiiuse/ directory of this repository.
+Next, head to the wiiuse-lib/ directory of this repository.
 
 Run: 
 ```
