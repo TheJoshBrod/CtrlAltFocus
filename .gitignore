@@ -53,3 +53,8 @@ Icon
 /virtual_env
 /myenv
 
+
+# Build directories
+build/*
+wiiuse/build/*
+

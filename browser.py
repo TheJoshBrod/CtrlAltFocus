@@ -74,6 +74,7 @@ def incentive(enabled_incentives: list, driver, tracker) -> None:
         pn.noise_maker(driver, tracker)
     elif (incentive == "Constellation_Mode"):
         print("Constellation_Mode")
+        pn.constellation_mode(driver,tracker)
     elif (incentive == "Brainrot_Mode"):
         print("Brainrot_Mode")
     elif(incentive == "Rick_Roll"):
