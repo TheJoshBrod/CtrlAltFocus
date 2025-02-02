@@ -67,16 +67,14 @@ def incentive(enabled_incentives: list, driver, tracker) -> None:
     elif (incentive == "Tab_Shuffler"):
         print("Tab_Shuffler")
         pn.tab_shuffler(driver)
-    elif (incentive == "Pop_Up_Generator"):
-        print("Pop_Up_Generator")
+    elif (incentive == "Snoopy_Mode"):
+        print("Snoopy_Mode")
     elif (incentive == "Noise_Maker"):
         print("Noise_Maker")
         pn.noise_maker(driver, tracker)
     elif (incentive == "Constellation_Mode"):
         print("Constellation_Mode")
         pn.constellation_mode(driver,tracker)
-    elif (incentive == "Brainrot_Mode"):
-        print("Brainrot_Mode")
     elif(incentive == "Rick_Roll"):
         print("Rick_Roll")
         pn.rickroll(driver, tracker)
@@ -94,8 +92,7 @@ def main() -> None:
     incentive_options = config["Productivity_Incentives"]
     enabled_incentives = [key for key, value in incentive_options.items() if value]
     
-    bop_it_mode = config["Productivity_Incentives"]
-
+    bop_it_mode = config["Productivity_Antidote"]["Bop_It_Enabled"]
     try:
         tracker = InactivityTracker(10, bop_it_mode)
         tracker_thread = threading.Thread(target=tracker.start_listening, daemon=True)

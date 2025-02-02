@@ -174,26 +174,24 @@ def brainrot(tracker):
             dt = clock.tick(60) / 1000
 
     pygame.quit()
+
 def constellation_mode(driver,tracker):
     pygame.init()
     screen = pygame.display.set_mode((0, 0),pygame.FULLSCREEN)
     width, height = screen.get_size()
 
-
-    image = pygame.image.load('resources/space.jpg')
+    image = pygame.image.load('resources/photos/space.jpg')
     image = pygame.transform.scale(image, (width, height))
-
 
     font = pygame.font.SysFont('Comic Sans MS', 100)  
     text_color = ('white')
     text_surface = font.render("Stop Spacing Out", True, text_color)
 
-
     angle = 0
 
-
     running = True
-    while running:
+    while not tracker.is_active():
+        pygame.event.pump()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -220,4 +218,6 @@ def constellation_mode(driver,tracker):
 
 
         pygame.time.Clock().tick(65)
+    time.sleep(0.1)
+    print("Escaped")
     pygame.quit()
