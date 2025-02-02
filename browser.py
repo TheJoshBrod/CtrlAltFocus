@@ -138,6 +138,36 @@ def tab_zapper(driver):
 
     tab_zapper_clean_up(driver)
 
+def tab_shuffler(driver):
+    tablist = driver.window_handles;
+    tabtitles = []
+    conlist = []
+    indexlist = list(range(len(tablist)))
+    for tab in tablist:
+        driver.switch_to.window(tab)
+        title = driver.execute_script("return document.title;")
+        icon = driver.execute_script("""
+        var icon = document.querySelector("link[rel*='icon']");
+        return icon ? icon.href : '';""")
+        conlist.append(icon)
+        tabtitles.append(title)
+
+    random.shuffle(indexlist)
+    random.shuffle(indexlist)
+    
+    for i in range(len(tablist)):
+        driver.switch_to.window(tablist[i])
+        driver.execute_script(f"document.title = '{tabtitles[indexlist[i]]}';")
+        driver.execute_script(f"""
+        var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = '{conlist[indexlist[i]]}';
+        document.getElementsByTagName('head')[0].appendChild(link);
+        """)
+    
+
+
 def punishment(enable_pushiments: list, driver) -> None:
     if (len(enable_pushiments) == 0):
         print("No Punishment selected")
@@ -151,6 +181,7 @@ def punishment(enable_pushiments: list, driver) -> None:
         tab_zapper(driver)
     elif (punishment == "Tab_Shuffler"):
         print("Tab_Shuffler")
+        tab_shuffler(driver)
     elif (punishment == "Fake_Tab_Shuffler"):
         print("Fake_Tab_Shuffler")
     elif (punishment == "Pop_Up_Generator"):
