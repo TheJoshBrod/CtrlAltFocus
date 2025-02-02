@@ -51,6 +51,7 @@ Icon
 /env
 /venv
 /virtual_env
+/myenv
 
 
 # Build directories
